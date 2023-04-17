@@ -1,0 +1,66 @@
+﻿@section Scripts {
+    <script>
+        var urlApi = "https://apicorecruddepartamentosfgg.azurewebsites.net";
+        $(document).ready(function() {
+            cargarDepartamentos();
+            $("#botondelete").click(function() {
+                var id = $("#numero").val();
+                var request = "/api/departamentos/" + id
+                $.ajax({
+                    url: urlApi + request,
+                    method: "DELETE",
+                    success: function() {
+                        cargarDepartamentos();
+                    }
+                })
+            })
+            $("#botoninsertar").click(function() {
+
+                var id = parseInt($("#numero").val());
+                var nom = $("#nombre").val();
+                var loc = $("#localidad").val();
+
+                var request = "/api/departamentos/" + id
+                $.ajax({
+                    url: urlApi + request,
+                    method: "DELETE",
+                    success: function() {
+                        cargarDepartamentos();
+                    }
+                })
+            })
+        })
+
+        function cargarDepartamentos() {
+            var request = "/api/departamentos"
+            $.ajax({
+                url: urlApi + request,
+                method: "GET",
+                dataType: "json",
+                success: function(data) {
+
+                }
+            })
+        }
+    </script>
+}
+
+    <button>Actualizar</button>
+    <button id="botoninsertar">Insertar</button>
+    <button id="botondelete">Borrar</button>
+
+    <input type="number" id="numero" />
+    <input type="text" id="nombre" />
+    <input type="text" id="localidad" />
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID:</th>
+                <th>Nombre</th>
+                <th>Localidad</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
