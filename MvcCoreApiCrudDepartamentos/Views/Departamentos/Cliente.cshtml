@@ -1,51 +1,52 @@
 ﻿@section Scripts {
+    <script src="~/js/ServiceDepartamentos.js" asp-append="true"></script>
     <script>
-        var urlApi = "https://apicorecruddepartamentosfgg.azurewebsites.net";
         $(document).ready(function() {
-            cargarDepartamentos();
+            cargarTablaDepartamentos();
             $("#botondelete").click(function() {
                 var id = $("#numero").val();
-                var request = "/api/departamentos/" + id
-                $.ajax({
-                    url: urlApi + request,
-                    method: "DELETE",
-                    success: function() {
-                        cargarDepartamentos();
-                    }
-                })
+                eliminarDepartamentoAsync(id, function() {
+                    cargarTablaDepartamentos();
+                });
             })
+ 
             $("#botoninsertar").click(function() {
-
-                var id = parseInt($("#numero").val());
+                var num = parseInt($("#numero").val());
                 var nom = $("#nombre").val();
                 var loc = $("#localidad").val();
-
-                var request = "/api/departamentos/" + id
-                $.ajax({
-                    url: urlApi + request,
-                    method: "DELETE",
-                    success: function() {
-                        cargarDepartamentos();
-                    }
+                insertarDepartamentoAsync(num, nom, loc, function(){
+                    cargarTablaDepartamentos();
+                })
+            })
+ 
+            $("#botonupdate").click(function() {
+                var num = parseInt($("#numero").val());
+                var nom = $("#nombre").val();
+                var loc = $("#localidad").val();
+                updateDepartamentoAsync(num, nom, loc, function(){
+                    cargarTablaDepartamentos();
                 })
             })
         })
-
-        function cargarDepartamentos() {
-            var request = "/api/departamentos"
-            $.ajax({
-                url: urlApi + request,
-                method: "GET",
-                dataType: "json",
-                success: function(data) {
-
-                }
+ 
+        function cargarTablaDepartamentos() {
+            getJsonDepartamentosAsync(function (data) {
+                console.log(data);
+                var html = "";
+                $.each(data, function (index, dept) {
+                    html += "<tr>";
+                    html += "<td>" + dept.idDepartamento + "</td>";
+                    html += "<td>" + dept.nombre + "</td>";
+                    html += "<td>" + dept.localidad + "</td>";
+                    html += "</tr>";
+                    $("#tabladepartamentos tbody").html(html);
+                })
             })
         }
     </script>
 }
 
-    <button>Actualizar</button>
+    <button id="botonupdate">Actualizar</button>
     <button id="botoninsertar">Insertar</button>
     <button id="botondelete">Borrar</button>
 
@@ -53,7 +54,7 @@
     <input type="text" id="nombre" />
     <input type="text" id="localidad" />
 
-    <table class="table table-striped">
+    <table id="tabladepartamentos" class="table table-striped">
         <thead>
             <tr>
                 <th>ID:</th>
